@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+        }
+
+        #inner {
+            margin: 20px auto;
+            overflow: hidden;
+            width: 730px;
+            height: 454px;
+            position: relative;
+        }
+
+        ul {
+            list-style: none;
+            position: absolute;
+            width: 600%;
+            left: 0;
+            transition: left 300ms linear;
+        }
+
+        li {
+            float: left;
+        }
+
+        .list {
+            display: flex;
+            position: absolute;
+            left: 30%;
+            bottom: 40px;
+        }
+
+        i {
+            width: 20px;
+            height: 20px;
+            border-radius: 10px;
+            border: solid 1px red;
+            background-color: #fff;
+            text-align: center;
+            margin: 0 20px;
+            cursor: pointer;
+        }
+
+        .arrow {
+            position: absolute;
+            width: 100%;
+            top: 50%;
+            margin-top: -30px;
+        }
+
+        .arrow-left,
+        .arrow-right {
+            width: 30px;
+            height: 60px;
+            position: absolute;
+            font: 20px/60px "consolas";
+            color: #fff;
+            background-color: rgba(0, 0, 0, .3);
+            text-align: center;
+            cursor: pointer;
+        }
+
+        .arrow-right {
+            right: 0;
+        }
+
+        .current {
+            background-color: skyblue;
+            color: #fff;
+        }
+    </style>
+</head>
+
+<body>
+    <div id='inner'>
+        <ul>
+            <li>
+                <img src="IMG/01.jpg" alt="">
+            </li>
+            <li>
+                <img src="IMG/02.jpg" alt="">
+            </li>
+            <li>
+                <img src="IMG/03.jpg" alt="">
+            </li>
+            <li>
+                <img src="IMG/04.jpg" alt="">
+            </li>
+            <li>
+                <img src="IMG/05.jpg" alt="">
+            </li>
+            <li>
+                <img src="IMG/06.jpg" alt="">
+            </li>
+        </ul>
+        <div class="list">
+            <i class="current">1</i>
+            <i>2</i>
+            <i>3</i>
+            <i>4</i>
+            <i>5</i>
+            <i>6</i>
+        </div>
+        <div class="arrow">
+            <span class="arrow-left">&lt;</span>
+            <span class="arrow-right">&gt;</span>
+        </div>
+    </div>
+
+
+    <script>
+        var orderBtns = document.querySelectorAll('i');
+        var lis = document.querySelectorAll('li');
+        var li = document.querySelector('li');
+        var ul = document.querySelector('ul');
+        var currentIndex = 0;
+        for (var i = 0; i < orderBtns.length; i++) {
+            orderBtns[i].index = i;
+            // 鼠标移动小球时图片开始轮播
+            orderBtns[i].onmouseover = function () {
+                for (var j = 0; j < orderBtns.length; j++) {
+                    orderBtns[j].classList.remove('current');
+                }
+                this.classList.add('current');
+                currentIndex = this.index;
+                ul.style.left = -this.index * lis[0].offsetWidth + 'px';
+            }
+        }
+        //  鼠标点击右边按钮切换图片
+        var right = document.querySelector('.arrow-right');
+        right.onclick = function () {
+            currentIndex++;
+            if (currentIndex > 5) {
+                currentIndex = 0;
+
+            }
+            ul.style.left = -currentIndex * lis[0].offsetWidth + 'px';
+            // 右键更改，下边的小球也会跟着更改
+            for (var i = 0; i < orderBtns.length; i++) {
+                orderBtns[i].classList.remove('current');
+            }
+            orderBtns[currentIndex].classList.add('current');
+        }
+        // 鼠标点击左边按钮切换图片
+        var left = document.querySelector('.arrow-left');
+        left.onclick = function () {
+            currentIndex--;
+            if (currentIndex < 0) {
+                currentIndex = 5;
+
+            }
+            ul.style.left = -currentIndex * lis[0].offsetWidth + 'px';
+            for (var i = 0; i < orderBtns.length; i++) {
+                orderBtns[i].classList.remove('current');
+            }
+            orderBtns[currentIndex].classList.add('current');
+        }
+        // 图片自动播放
+        var timer = setInterval(function(){
+            right.onclick();
+        },3000)
+        // 鼠标移入暂停播放，鼠标移出开始轮播
+        var inner = document.querySelector('#inner');
+        inner.onmouseover = function (){
+            clearInterval(timer);
+        }
+        inner.onmouseout = function (){
+            timer = setInterval(function(){
+                right.onclick(); 
+            },3000)
+        }
+
+    </script>
+</body>
+
+</html>
